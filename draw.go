@@ -53,8 +53,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// If the mouse is released at the same position as the anchor,
 			// we want to allow the user to insert text at the anchor.
 			if msg.X == m.anchor.x && msg.Y == m.anchor.y {
-				m.textAnchor.x = msg.X
-				m.textAnchor.y = msg.Y
+				m.textAnchorSet(msg.X, msg.Y)
 			}
 			m.anchorReset()
 			return m, nil
@@ -82,14 +81,28 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+c":
 			return m, tea.Quit
 		case "esc":
+			m.textAnchorReset()
 			m.anchorReset()
+		case "ctrl+z":
 			m.restore()
+		case "backspace":
+			if m.textAnchorIsSet() {
+				m.textAnchorDecrement()
+				m.canvas[m.textAnchor.y][m.textAnchor.x] = " "
+			}
 		case "1", "2", "3", "4", "5", "6", "7", "8", "9":
 			// Use the number keys to select the color.
 			// The colors are: red, green, yellow, blue, magenta, cyan, white.
 			// which correspond to the colors in the terminal / lipgloss colors.
 			m.color = msg.String()
 		default:
+			if m.textAnchorIsSet() {
+				// If the textAnchor is set, we want to allow the user to
+				// insert text at the anchor.
+				style := lipgloss.NewStyle().Foreground(lipgloss.Color(m.color))
+				m.canvas[m.textAnchor.y][m.textAnchor.x] = style.Render(msg.String())
+				m.textAnchorIncrement()
+			}
 			// Otherwise, we will want to change the character that is being
 			// used to the character that the user just typed.
 			m.character = msg.String()

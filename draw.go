@@ -55,12 +55,12 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tea.MouseRelease:
 			m.drawing = false
 		case tea.MouseMotion:
-			if m.cursor.x != 0 && m.cursor.y != 0 {
+			if m.cursorSet() {
 				m.restore()
 				m.DrawShape(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
 			}
 		case tea.MouseLeft:
-			if m.cursor.x != 0 && m.cursor.y != 0 {
+			if m.cursorSet() {
 				return m, nil
 			}
 
@@ -75,7 +75,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			style := lipgloss.NewStyle().Foreground(lipgloss.Color(m.color))
 			m.canvas[msg.Y][msg.X] = style.Render(m.character)
 		case tea.MouseRight:
-			if m.cursor.x != 0 && m.cursor.y != 0 {
+			if m.cursorSet() {
 				// Cursor was already set, now draw the box based on the
 				// cursor and current position of the mouse.
 				m.DrawShape(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
@@ -133,6 +133,10 @@ func (m model) View() string {
 		s.WriteString("\n")
 	}
 	return strings.TrimSuffix(s.String(), "\n")
+}
+
+func (m *model) cursorSet() bool {
+	return m.cursor.x != 0 && m.cursor.y != 0
 }
 
 // backup is a helper function that copies the current canvas to the backup

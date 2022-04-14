@@ -20,9 +20,8 @@ draw
 
 ### Boxes
 
-Draw boxes by clicking the right mouse button to set the anchor of the
-box and then move your mouse to another point and click the right mouse
-button again.
+Draw boxes by clicking and dragging the right mouse button, releasing the
+right mouse button will draw the box.
 
 Voila! You have a box drawn where you want it.
 

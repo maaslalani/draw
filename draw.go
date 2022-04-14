@@ -54,13 +54,16 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.Type {
 		case tea.MouseRelease:
 			m.drawing = false
-
 		case tea.MouseMotion:
 			if m.cursor.x != 0 && m.cursor.y != 0 {
 				m.restore()
 				m.DrawShape(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
 			}
 		case tea.MouseLeft:
+			if m.cursor.x != 0 && m.cursor.y != 0 {
+				return m, nil
+			}
+
 			if !m.drawing {
 				m.backup()
 			}
@@ -87,6 +90,8 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.cursor.y = msg.Y
 
 				m.backup()
+
+				m.drawing = true
 			}
 		}
 	case tea.KeyMsg:

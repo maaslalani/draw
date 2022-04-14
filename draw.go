@@ -40,11 +40,9 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// that we can store the style of the character drawn as well so that
 		// each cell can be a different style / color.
 		m.canvas = make([][]string, msg.Height)
+		m.backupCanvas = make([][]string, msg.Height)
 		for i := range m.canvas {
 			m.canvas[i] = make([]string, msg.Width)
-		}
-		m.backupCanvas = make([][]string, msg.Height)
-		for i := range m.backupCanvas {
 			m.backupCanvas[i] = make([]string, msg.Width)
 		}
 		m.backup()
@@ -69,8 +67,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Cursor was not set, so set it to the current position
 				// of the mouse and create a backup of the canvas.
 				m.backup()
-				m.cursor.x = msg.X
-				m.cursor.y = msg.Y
+				m.cursorSet(msg.X, msg.Y)
 			}
 		}
 	case tea.KeyMsg:
@@ -109,33 +106,4 @@ func (m model) View() string {
 		s.WriteString("\n")
 	}
 	return strings.TrimSuffix(s.String(), "\n")
-}
-
-func (m *model) cursorIsSet() bool {
-	return m.cursor.x != 0 && m.cursor.y != 0
-}
-
-func (m *model) cursorReset() {
-	m.cursor.x = 0
-	m.cursor.y = 0
-}
-
-// backup is a helper function that copies the current canvas to the backup
-// canvas.
-func (m *model) backup() {
-	for i := range m.canvas {
-		for j := range m.canvas[i] {
-			m.backupCanvas[i][j] = m.canvas[i][j]
-		}
-	}
-}
-
-// restore is a helper function that copies the backup canvas to the current
-// canvas.
-func (m *model) restore() {
-	for i := range m.canvas {
-		for j := range m.canvas[i] {
-			m.canvas[i][j] = m.backupCanvas[i][j]
-		}
-	}
 }

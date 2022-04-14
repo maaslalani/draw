@@ -14,6 +14,7 @@ type model struct {
 }
 
 func (m *model) Init() tea.Cmd {
+	m.character = "*"
 	return nil
 }
 

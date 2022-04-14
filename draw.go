@@ -53,7 +53,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tea.MouseMotion:
 			if m.cursor.x != 0 && m.cursor.y != 0 {
 				m.restore()
-				m.DrawBox(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
+				m.DrawShape(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
 			}
 		case tea.MouseLeft:
 			// When the user clicks on the mouse, we want to write the
@@ -65,7 +65,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.cursor.x != 0 && m.cursor.y != 0 {
 				// Cursor was already set, now draw the box based on the
 				// cursor and current position of the mouse.
-				m.DrawBox(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
+				m.DrawShape(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
 
 				// Reset the cursor to the origin.
 				m.cursor.x = 0
@@ -87,6 +87,8 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Reset the cursor to the origin.
 			m.cursor.x = 0
 			m.cursor.y = 0
+
+			m.restore()
 		case "1", "2", "3", "4", "5", "6", "7", "8", "9":
 			// Use the number keys to select the color.
 			// The colors are: red, green, yellow, blue, magenta, cyan, white.

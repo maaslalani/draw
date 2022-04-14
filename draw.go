@@ -22,8 +22,6 @@ type model struct {
 	// cursor is used to anchor the cursor when a user selects a position
 	// to keep in mind. I.e. when a user is drawing a box
 	cursor struct{ x, y int }
-	// drawing is whether the user is currently drawing something on the screen _actively_.
-	drawing bool
 }
 
 // Init initializes the model with the initial state.
@@ -53,45 +51,26 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.MouseMsg:
 		switch msg.Type {
 		case tea.MouseRelease:
-			m.drawing = false
-		case tea.MouseMotion:
-			if m.cursorSet() {
-				m.restore()
-				m.DrawShape(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
-			}
+			m.cursorReset()
+			return m, nil
 		case tea.MouseLeft:
-			if m.cursorSet() {
-				return m, nil
-			}
-
-			if !m.drawing {
-				m.backup()
-			}
-			m.drawing = true
-
 			// When the user clicks on the mouse, we want to write the
 			// character to the current position of the mouse in the grid, so
 			// that we can draw it later.
 			style := lipgloss.NewStyle().Foreground(lipgloss.Color(m.color))
 			m.canvas[msg.Y][msg.X] = style.Render(m.character)
 		case tea.MouseRight:
-			if m.cursorSet() {
+			if m.cursorIsSet() {
 				// Cursor was already set, now draw the box based on the
 				// cursor and current position of the mouse.
+				m.restore()
 				m.DrawShape(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
-
-				// Reset the cursor to the origin.
-				m.cursor.x = 0
-				m.cursor.y = 0
 			} else {
 				// Cursor was not set, so set it to the current position
-				// of the mouse.
+				// of the mouse and create a backup of the canvas.
+				m.backup()
 				m.cursor.x = msg.X
 				m.cursor.y = msg.Y
-
-				m.backup()
-
-				m.drawing = true
 			}
 		}
 	case tea.KeyMsg:
@@ -99,10 +78,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+c":
 			return m, tea.Quit
 		case "esc":
-			// Reset the cursor to the origin.
-			m.cursor.x = 0
-			m.cursor.y = 0
-
+			m.cursorReset()
 			m.restore()
 		case "1", "2", "3", "4", "5", "6", "7", "8", "9":
 			// Use the number keys to select the color.
@@ -135,8 +111,13 @@ func (m model) View() string {
 	return strings.TrimSuffix(s.String(), "\n")
 }
 
-func (m *model) cursorSet() bool {
+func (m *model) cursorIsSet() bool {
 	return m.cursor.x != 0 && m.cursor.y != 0
+}
+
+func (m *model) cursorReset() {
+	m.cursor.x = 0
+	m.cursor.y = 0
 }
 
 // backup is a helper function that copies the current canvas to the backup

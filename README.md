@@ -1,6 +1,7 @@
 # Draw
 
-Draw in your terminal
+`draw` is an simple drawing tool in the terminal.
+Hold your mouse down and move it across the screen to draw anything you want!
 
 <p align="center">
   <img src="./assets/draw.png?raw=true" alt="Draw" />
@@ -18,13 +19,8 @@ draw
 ```
 
 ### Controls
-
-<kbd>ctrl+c</kbd> to exit.
-
-Press any key to draw with that character.
-
-### Colors
-
+* <kbd>ctrl+c</kbd> to exit.
+* Press any key to draw with that character.
 * Press <kbd>1</kbd> for red.
 * Press <kbd>2</kbd> for green.
 * Press <kbd>3</kbd> for yellow.

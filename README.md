@@ -18,6 +18,18 @@ go install github.com/maaslalani/draw@latest
 draw
 ```
 
+### Boxes
+
+Draw boxes by clicking the right mouse button to set the anchor of the
+box and then move your mouse to another point and click the right mouse
+button again.
+
+Voila! You have a box drawn where you want it.
+
+<p align="center">
+  <img src="./assets/boxes.png?raw=true" alt="Draw Boxes" />
+</p>
+
 ### Controls
 * <kbd>ctrl+c</kbd> to exit.
 * Press any key to draw with that character.

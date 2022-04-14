@@ -16,6 +16,9 @@ type model struct {
 	// color is the current color selected that will be used to write the
 	// `character` to the grid.
 	color string
+	// cursor is used to anchor the cursor when a user selects a position
+	// to keep in mind. I.e. when a user is drawing a box
+	cursor struct{ x, y int }
 }
 
 // Init initializes the model with the initial state.
@@ -45,11 +48,30 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// that we can draw it later.
 			style := lipgloss.NewStyle().Foreground(lipgloss.Color(m.color))
 			m.canvas[msg.Y][msg.X] = style.Render(m.character)
+		case tea.MouseRight:
+			if m.cursor.x != 0 && m.cursor.y != 0 {
+				// Cursor was already set, now draw the box based on the
+				// cursor and current position of the mouse.
+				m.DrawBox(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
+
+				// Reset the cursor to the origin.
+				m.cursor.x = 0
+				m.cursor.y = 0
+			} else {
+				// Cursor was not set, so set it to the current position
+				// of the mouse.
+				m.cursor.x = msg.X
+				m.cursor.y = msg.Y
+			}
 		}
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c":
 			return m, tea.Quit
+		case "esc":
+			// Reset the cursor to the origin.
+			m.cursor.x = 0
+			m.cursor.y = 0
 		case "1", "2", "3", "4", "5", "6", "7", "8", "9":
 			// Use the number keys to select the color.
 			// The colors are: red, green, yellow, blue, magenta, cyan, white.

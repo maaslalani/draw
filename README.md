@@ -29,6 +29,11 @@ Voila! You have a box drawn where you want it.
   <img src="./assets/boxes.png?raw=true" alt="Draw Boxes" />
 </p>
 
+### Text Insertion
+
+Tap the right mouse button to set an anchor for inserting text and type away!
+Press <kbd>ESC</kbd> to exit insert mode.
+
 ### Controls
 * <kbd>ctrl+c</kbd> to exit.
 * Press any key to draw with that character.

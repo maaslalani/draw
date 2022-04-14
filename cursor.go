@@ -1,18 +1,18 @@
 package main
 
-// cursorIsSet returns whether the cursor is set.
-func (m *model) cursorIsSet() bool {
-	return m.cursor.x != 0 && m.cursor.y != 0
+// anchorIsSet returns whether the anchor is set.
+func (m *model) anchorIsSet() bool {
+	return m.anchor.x != 0 && m.anchor.y != 0
 }
 
-// cursorSet sets the cursor to the given position.
-func (m *model) cursorSet(x, y int) {
-	m.cursor.x = x
-	m.cursor.y = y
+// anchorSet sets the anchor to the given position.
+func (m *model) anchorSet(x, y int) {
+	m.anchor.x = x
+	m.anchor.y = y
 }
 
-// cursorReset resets the cursor to the origin.
-func (m *model) cursorReset() {
-	m.cursor.x = 0
-	m.cursor.y = 0
+// anchorReset resets the anchor to the origin.
+func (m *model) anchorReset() {
+	m.anchor.x = 0
+	m.anchor.y = 0
 }

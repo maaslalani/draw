@@ -19,9 +19,10 @@ type model struct {
 	// color is the current color selected that will be used to write the
 	// `character` to the grid.
 	color string
-	// cursor is used to anchor the cursor when a user selects a position
+	// anchor is used to anchor the anchor when a user selects a position
 	// to keep in mind. I.e. when a user is drawing a box
-	cursor struct{ x, y int }
+	anchor     struct{ x, y int }
+	textAnchor struct{ x, y int }
 }
 
 // Init initializes the model with the initial state.
@@ -49,7 +50,13 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.MouseMsg:
 		switch msg.Type {
 		case tea.MouseRelease:
-			m.cursorReset()
+			// If the mouse is released at the same position as the anchor,
+			// we want to allow the user to insert text at the anchor.
+			if msg.X == m.anchor.x && msg.Y == m.anchor.y {
+				m.textAnchor.x = msg.X
+				m.textAnchor.y = msg.Y
+			}
+			m.anchorReset()
 			return m, nil
 		case tea.MouseLeft:
 			// When the user clicks on the mouse, we want to write the
@@ -58,16 +65,16 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			style := lipgloss.NewStyle().Foreground(lipgloss.Color(m.color))
 			m.canvas[msg.Y][msg.X] = style.Render(m.character)
 		case tea.MouseRight:
-			if m.cursorIsSet() {
-				// Cursor was already set, now draw the box based on the
-				// cursor and current position of the mouse.
+			if m.anchorIsSet() {
+				// Anchor was already set, now draw the box based on the
+				// anchor and current position of the mouse.
 				m.restore()
-				m.DrawShape(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
+				m.DrawShape(Point{m.anchor.x, m.anchor.y}, Point{msg.X, msg.Y})
 			} else {
-				// Cursor was not set, so set it to the current position
+				// anchor was not set, so set it to the current position
 				// of the mouse and create a backup of the canvas.
 				m.backup()
-				m.cursorSet(msg.X, msg.Y)
+				m.anchorSet(msg.X, msg.Y)
 			}
 		}
 	case tea.KeyMsg:
@@ -75,7 +82,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+c":
 			return m, tea.Quit
 		case "esc":
-			m.cursorReset()
+			m.anchorReset()
 			m.restore()
 		case "1", "2", "3", "4", "5", "6", "7", "8", "9":
 			// Use the number keys to select the color.

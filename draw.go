@@ -22,6 +22,8 @@ type model struct {
 	// cursor is used to anchor the cursor when a user selects a position
 	// to keep in mind. I.e. when a user is drawing a box
 	cursor struct{ x, y int }
+	// drawing is whether the user is currently drawing something on the screen _actively_.
+	drawing bool
 }
 
 // Init initializes the model with the initial state.
@@ -50,12 +52,20 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.backup()
 	case tea.MouseMsg:
 		switch msg.Type {
+		case tea.MouseRelease:
+			m.drawing = false
+
 		case tea.MouseMotion:
 			if m.cursor.x != 0 && m.cursor.y != 0 {
 				m.restore()
 				m.DrawShape(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
 			}
 		case tea.MouseLeft:
+			if !m.drawing {
+				m.backup()
+			}
+			m.drawing = true
+
 			// When the user clicks on the mouse, we want to write the
 			// character to the current position of the mouse in the grid, so
 			// that we can draw it later.

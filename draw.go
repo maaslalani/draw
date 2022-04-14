@@ -11,6 +11,9 @@ type model struct {
 	// canvas contains the cells of the terminal and stores the strings +
 	// styles of the characters written to the grid.
 	canvas [][]string
+	// backupCanvas is a backup of the canvas that we can use to undo the
+	// last action.
+	backupCanvas [][]string
 	// character is the current character selected to be written to the grid.
 	character string
 	// color is the current color selected that will be used to write the
@@ -40,8 +43,18 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		for i := range m.canvas {
 			m.canvas[i] = make([]string, msg.Width)
 		}
+		m.backupCanvas = make([][]string, msg.Height)
+		for i := range m.backupCanvas {
+			m.backupCanvas[i] = make([]string, msg.Width)
+		}
+		m.backup()
 	case tea.MouseMsg:
 		switch msg.Type {
+		case tea.MouseMotion:
+			if m.cursor.x != 0 && m.cursor.y != 0 {
+				m.restore()
+				m.DrawBox(Point{m.cursor.x, m.cursor.y}, Point{msg.X, msg.Y})
+			}
 		case tea.MouseLeft:
 			// When the user clicks on the mouse, we want to write the
 			// character to the current position of the mouse in the grid, so
@@ -62,6 +75,8 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// of the mouse.
 				m.cursor.x = msg.X
 				m.cursor.y = msg.Y
+
+				m.backup()
 			}
 		}
 	case tea.KeyMsg:
@@ -101,4 +116,24 @@ func (m model) View() string {
 		s.WriteString("\n")
 	}
 	return strings.TrimSuffix(s.String(), "\n")
+}
+
+// backup is a helper function that copies the current canvas to the backup
+// canvas.
+func (m *model) backup() {
+	for i := range m.canvas {
+		for j := range m.canvas[i] {
+			m.backupCanvas[i][j] = m.canvas[i][j]
+		}
+	}
+}
+
+// restore is a helper function that copies the backup canvas to the current
+// canvas.
+func (m *model) restore() {
+	for i := range m.canvas {
+		for j := range m.canvas[i] {
+			m.canvas[i][j] = m.backupCanvas[i][j]
+		}
+	}
 }

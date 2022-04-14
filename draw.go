@@ -33,7 +33,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// This will be a 2D slice of strings. We use strings and not runes so
 		// that we can store the style of the character drawn as well so that
 		// each cell can be a different style / color.
-		m.canvas = make([][]string, msg.Height-1)
+		m.canvas = make([][]string, msg.Height)
 		for i := range m.canvas {
 			m.canvas[i] = make([]string, msg.Width)
 		}
@@ -78,5 +78,5 @@ func (m model) View() string {
 		}
 		s.WriteString("\n")
 	}
-	return s.String()
+	return strings.TrimSuffix(s.String(), "\n")
 }

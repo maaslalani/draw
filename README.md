@@ -34,6 +34,28 @@ Voila! You have a box drawn where you want it.
 Tap the right mouse button to set an anchor for inserting text and type away!
 Press <kbd>ESC</kbd> to exit insert mode.
 
+### Saving Drawings
+
+`draw` automatically saves your latest masterpiece to `/tmp/draw.txt` by
+default. You can change this location by setting the environment variable
+`$DRAW_FILE`.
+
+```
+export DRAW_FILE=/path/to/draw.txt
+```
+
+To view this drawing use `cat`:
+
+```
+cat $DRAW_FILE
+```
+
+To save the drawing somewhere more permanent, use `mv`.
+
+```
+mv $DRAW_FILE ~/.data/drawings/masterpiece.txt
+```
+
 ### Controls
 * <kbd>ctrl+c</kbd> to exit.
 * Press any key to draw with that character.

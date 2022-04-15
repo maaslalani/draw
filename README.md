@@ -34,6 +34,11 @@ Voila! You have a box drawn where you want it.
 Tap the right mouse button to set an anchor for inserting text and type away!
 Press <kbd>ESC</kbd> to exit insert mode.
 
+<p align="center">
+  <img src="./assets/text.png?raw=true" alt="Insert Text" />
+</p>
+
+
 ### Saving Drawings
 
 `draw` automatically saves your latest masterpiece to `/tmp/draw.txt` by

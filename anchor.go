@@ -24,12 +24,16 @@ func (m *model) textAnchorIsSet() bool {
 
 // textAnchorReset resets the text anchor to the origin.
 func (m *model) textAnchorReset() {
+	m.textAnchor.ix = 0
+	m.textAnchor.iy = 0
 	m.textAnchor.x = 0
 	m.textAnchor.y = 0
 }
 
 // textAnchorSet sets the text anchor to the given position.
 func (m *model) textAnchorSet(x, y int) {
+	m.textAnchor.ix = x
+	m.textAnchor.iy = y
 	m.textAnchor.x = x
 	m.textAnchor.y = y
 }

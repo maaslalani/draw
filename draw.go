@@ -22,7 +22,7 @@ type model struct {
 	// anchor is used to anchor the anchor when a user selects a position
 	// to keep in mind. I.e. when a user is drawing a box
 	anchor     struct{ x, y int }
-	textAnchor struct{ x, y int }
+	textAnchor struct{ x, y, ix, iy int }
 }
 
 // Init initializes the model with the initial state.
@@ -95,6 +95,11 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// The colors are: red, green, yellow, blue, magenta, cyan, white.
 			// which correspond to the colors in the terminal / lipgloss colors.
 			m.color = msg.String()
+		case "enter":
+			if m.textAnchorIsSet() {
+				m.textAnchor.x = m.textAnchor.ix
+				m.textAnchor.y++
+			}
 		default:
 			if m.textAnchorIsSet() {
 				// If the textAnchor is set, we want to allow the user to

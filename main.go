@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
@@ -11,6 +12,14 @@ const DEFAULT_DRAW_FILE = "/tmp/draw.txt"
 const DRAW_FILE_KEY = "DRAW_FILE"
 
 func main() {
+	var helpFlag = flag.Bool("help", false, "help")
+	flag.Parse()
+
+	if *helpFlag {
+		fmt.Println(help())
+		os.Exit(0)
+	}
+
 	m := &model{}
 
 	p := tea.NewProgram(m)
@@ -32,6 +41,7 @@ func main() {
 	if !ok {
 		file = DEFAULT_DRAW_FILE
 	}
+	// If a file is given as an argument, use that instead.
 	if len(os.Args) > 1 {
 		file = os.Args[1]
 	}

@@ -32,5 +32,8 @@ func main() {
 	if !ok {
 		file = DEFAULT_DRAW_FILE
 	}
+	if len(os.Args) > 1 {
+		file = os.Args[1]
+	}
 	os.WriteFile(file, []byte(m.View()), 0644)
 }

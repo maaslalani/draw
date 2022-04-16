@@ -38,16 +38,32 @@ func (m *model) textAnchorSet(x, y int) {
 	m.textAnchor.y = y
 }
 
-// textAnchorIncrement increments the text anchor by one character.
-func (m *model) textAnchorIncrement() {
+// textAnchorRight moves the text anchor right by one spot.
+func (m *model) textAnchorRight() {
 	if m.textAnchor.x >= len(m.canvas[len(m.canvas)-1])-1 {
 		return
 	}
 	m.textAnchor.x++
 }
 
-// textAnchorDecrement decrements the text anchor by one character.
-func (m *model) textAnchorDecrement() {
+// textAnchorUp moves the text anchor up by one spot.
+func (m *model) textAnchorUp() {
+	if m.textAnchor.y <= 0 {
+		return
+	}
+	m.textAnchor.y--
+}
+
+// textAnchorDown moves the text anchor down by one spot.
+func (m *model) textAnchorDown() {
+	if m.textAnchor.y >= len(m.canvas)-1 {
+		return
+	}
+	m.textAnchor.y++
+}
+
+// textAnchorLeft moves the text anchor left by one spot.
+func (m *model) textAnchorLeft() {
 	if m.textAnchor.x <= 0 {
 		return
 	}

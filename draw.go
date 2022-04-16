@@ -87,7 +87,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.restore()
 		case "backspace":
 			if m.textAnchorIsSet() {
-				m.textAnchorDecrement()
+				m.textAnchorLeft()
 				m.canvas[m.textAnchor.y][m.textAnchor.x] = " "
 			}
 		case "1", "2", "3", "4", "5", "6", "7", "8", "9":
@@ -98,7 +98,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			if m.textAnchorIsSet() {
 				m.textAnchor.x = m.textAnchor.ix
-				m.textAnchor.y++
+				m.textAnchorDown()
 			}
 		default:
 			if m.textAnchorIsSet() {
@@ -106,7 +106,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// insert text at the anchor.
 				style := lipgloss.NewStyle().Foreground(lipgloss.Color(m.color))
 				m.canvas[m.textAnchor.y][m.textAnchor.x] = style.Render(msg.String())
-				m.textAnchorIncrement()
+				m.textAnchorRight()
 			}
 			// Otherwise, we will want to change the character that is being
 			// used to the character that the user just typed.

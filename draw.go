@@ -47,6 +47,8 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.backupCanvas[i] = make([]string, msg.Width)
 		}
 		m.backup()
+
+		m.load(readStdin())
 	case tea.MouseMsg:
 		switch msg.Type {
 		case tea.MouseRelease:

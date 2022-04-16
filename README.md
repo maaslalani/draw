@@ -49,17 +49,9 @@ default. You can change this location by setting the environment variable
 export DRAW_FILE=/path/to/draw.txt
 ```
 
-To view this drawing use `cat`:
-
-```
-cat $DRAW_FILE
-```
-
-To save the drawing somewhere more permanent, use `mv`.
-
-```
-mv $DRAW_FILE ~/.data/drawings/masterpiece.txt
-```
+To view this drawing use `cat` or `mv` the drawing to somewhere more permanent.
+If you already know you want to save the drawing, run `draw` with the file path
+where you want to save the drawing: `draw masterpiece.txt`.
 
 ### Controls
 * <kbd>ctrl+c</kbd> to exit.

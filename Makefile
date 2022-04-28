@@ -1,18 +1,21 @@
 BINARY_NAME=draw
 INSTALL_DIR="/usr/bin/"
- 
-all: build run
- 
-install:
-	go build -o "${INSTALL_DIR}${BINARY_NAME}"
 
-build:
+SRC=$(wildcard *.go)
+
+all: draw
+
+draw: ${SRC}
 	go build -o "${BINARY_NAME}"
 
-run:
-	go build -o ${BINARY_NAME}
+install: draw
+	cp "${BINARY_NAME}" "${INSTALL_DIR}${BINARY_NAME}"
+
+run: draw
 	./${BINARY_NAME}
- 
+
 clean:
-	go clean
-	rm ${BINARY_NAME}
+	@go clean
+	@rm -f "${BINARY_NAME}"
+
+.PHONY: all clean run install

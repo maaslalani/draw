@@ -63,3 +63,4 @@ where you want to save the drawing: `draw masterpiece.txt`.
 * Press <kbd>5</kbd> for magenta.
 * Press <kbd>6</kbd> for cyan.
 * Press <kbd>7</kbd> for gray.
+* Press <kbd>Alt+0</kbd> - <kbd>Alt+9</kbd> to draw with digits.

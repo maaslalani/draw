@@ -103,8 +103,8 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		default:
 			var character = msg.String()
 
-			if strings.HasPrefix(character, "alt+") {
-				character = character[4:]
+			if msg.Alt {
+				character = string(msg.Runes[0])
 			}
 
 			if m.textAnchorIsSet() {

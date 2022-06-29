@@ -101,16 +101,22 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.textAnchorDown()
 			}
 		default:
+			var character = msg.String()
+
+			if msg.Alt {
+				character = string(msg.Runes[0])
+			}
+
 			if m.textAnchorIsSet() {
 				// If the textAnchor is set, we want to allow the user to
 				// insert text at the anchor.
 				style := lipgloss.NewStyle().Foreground(lipgloss.Color(m.color))
-				m.canvas[m.textAnchor.y][m.textAnchor.x] = style.Render(msg.String())
+				m.canvas[m.textAnchor.y][m.textAnchor.x] = style.Render(character)
 				m.textAnchorRight()
 			}
 			// Otherwise, we will want to change the character that is being
 			// used to the character that the user just typed.
-			m.character = msg.String()
+			m.character = character
 		}
 	}
 	return m, nil

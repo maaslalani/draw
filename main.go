@@ -22,10 +22,7 @@ func main() {
 
 	m := &model{}
 
-	p := tea.NewProgram(m)
-
-	p.EnableMouseAllMotion()
-	p.EnterAltScreen()
+	p := tea.NewProgram(m, tea.WithAltScreen(), tea.WithMouseAllMotion())
 
 	if err := p.Start(); err != nil {
 		fmt.Printf("Alas, there's been an error: %v", err)

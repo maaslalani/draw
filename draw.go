@@ -103,7 +103,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		default:
 			var character = msg.String()
 
-			if msg.Alt {
+			if msg.Alt && len(msg.Runes) > 0 {
 				character = string(msg.Runes[0])
 			}
 
